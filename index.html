@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="assembler">
+<head>
+    <meta charset="UTF-8">
+    <title>Online assembler</title>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js'></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular-animate.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular-sanitize.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.3.min.js"></script>
+
+    <script src="codemirror.js"></script>
+    <link href="codemirror.css" rel="stylesheet" media="all"/>
+
+    <script src="assembler.js"></script>
+    <script src="asm_mode.js"></script>
+    <script src="interface.js"></script>
+    <script src="emulator.js"></script>
+    <link href="style.css" rel="stylesheet" media="all"/>
+</head>
+<body>
+    <div ng-controller="AssemblerController as asm" ng-init="asm.init()">
+        <div id="assembler_code_entry" class="well well-lg asm_panel">
+            <textarea id="asm_code" class="code" ng-model="code"></textarea>
+            <div class="btn-group" role="group" aria-label="...">
+                <button type="button" class="btn btn-default" ng-click="asm.assemble()">Assemble</button>
+            </div>
+            <div id="asm_output">
+                    {{asm.code}}
+                <!--<div class="code_line" ng-repeat="l in asm.code.split('\n') track by $index">
+                    {{l}}
+                </div>-->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
