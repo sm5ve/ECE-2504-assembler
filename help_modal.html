@@ -4,10 +4,16 @@
 <div class="modal-body scrollable">
     <accordion close-others="false">
         <accordion-group heading="Explanation" is-open="true">
+            <div ng-bind-html="getExp()"></div>
+        </accordion-group>
+        <accordion-group heading="Format" is-open="true">
+            <div class="code black">{{getSchema()}}</div>
+        </accordion-group>
+        <accordion-group heading="Description" is-open="true">
             <div ng-bind-html="getDesc()"></div>
         </accordion-group>
-        <accordion-group heading="Syntax" is-open="true">
-            <div class="code black">{{getSchema()}}</div>
+        <accordion-group heading="Opcode" is-open="true">
+            {{opcode}}
         </accordion-group>
     </accordion>
     <button type="button" class="btn btn-default" ng-click="openTab()">Load example</button>
