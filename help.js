@@ -6,7 +6,7 @@ var examples = {
 };
 
 var desc = {
-    "LDI": 'LDI, or load immediate allows one to store a constant number between 0 and 7 in a register. LDI is often used to initialize registers for ' +
+    "LDI": 'LDI, or load immediate allows one to store a constant number between 0 and 7 in a register. R[DR]←zf OP* LDI is often used to initialize registers for ' +
     'an operation like <span class="code black">jmp</span>.',
     "INC": "INC, or increment, accepts "
 };
