@@ -33,13 +33,16 @@ var argTypes = {
     "1regad": {"args": {"rd": "reg", "addr": "addr"}, "ord": ["addr", "rd", "addr"]}
 }
 
-var labels = {};
-
 var macros = {};
 
 var failed = false;
-
+var labelsEnabled = true;
+var errors = [];
+var readLines;
+var tokenLineToRealLine;
 function assemble(code){
+    var inlineLabels = 0;
+    errors = [];
     failed = false;
     code += "\n";
     var inLineComment = false;
@@ -47,15 +50,14 @@ function assemble(code){
     var nextToken = false;
     var nextLine = false;
     var tokens = [];
-    var tokenLineToRealLine = [];
+    tokenLineToRealLine = [];
     tokens[0] = [];
-    var readLines = 0;
+    readLines = 0;
     for(var i = 0; i < code.length; i++){
         if(code[i] == "\n"){
             inLineComment = false;
-            if(tokenLineToRealLine[tokens.length - 1] == undefined)
-                tokenLineToRealLine[tokens.length - 1] = readLines;
-            //tokensNewLine(tokens);
+
+            if(code[i - 1] != ":")
             nextLine = true;
             readLines++;
             nextToken = false;
@@ -99,11 +101,25 @@ function assemble(code){
             if(!inLineComment && !inExtComment) {
                 addToToken(tokens, code[i], nextToken, nextLine);
                 nextToken = false;
-                nextLine = false;
+                nextLine = (code[i] == ":");
+                if(code[i] == ":") {
+                    inlineLabels++;
+                    if(code[i + 1] == " "){
+                        i++;
+                    }
+                }
             }
         }
     }
+
+    if(tokens.length == 1 && tokens[0].length == 1 && tokens[0][0] == "undefined"){
+        logError("Error: cannot assemble nothing. Please enter assembly code and try again.");
+        var o = {};
+        o.errors = errors;
+        return o;
+    }
     var codeTokens = [];
+    var codeTokenToGlobalToken = [];
     var labelInds = {};
 
     for(var i = 0; i < tokens.length; i++){
@@ -111,15 +127,22 @@ function assemble(code){
         if(instructions[line[0].toUpperCase()] != null){
             line[0] = line[0].toUpperCase();
             codeTokens[codeTokens.length] = line;
+            codeTokenToGlobalToken.push(i);
         }
-        else if(line[line.length - 1].endsWith(":")){
+        else if(line[line.length - 1].endsWith(":") && labelsEnabled){
             if(line.length > 1){
                 logError("Invalid label identifier on line " + tokenLineToRealLine[i]);
                 logError("Labels can only contain 1 word");
                 errorPrintContext(code, tokenLineToRealLine[i]);
             }
-            else{
-                labelInds[line[0].split(":")[0]] = code.length;
+            else {
+                if (labelInds[line[0].split(":")[0]] != undefined) {
+                    logError("Error: attempted to redefine label: " + line[0].split(":")[0]);
+                    errorPrintContext(code, tokenLineToRealLine[i]);
+                }
+                else {
+                    labelInds[line[0].split(":")[0]] = codeTokens.length;
+                }
             }
         }
         else{
@@ -127,22 +150,28 @@ function assemble(code){
             errorPrintContext(code, tokenLineToRealLine[i]);
         }
     }
+
     var out = "\n";
     var padding = "0000";
     for(var i = 0; i < codeTokens.length; i++){
-        var opcd = createOp(codeTokens[i], i, labelInds, tokenLineToRealLine[i], code).toString(16);
+        var op = createOp(codeTokens[i], i, labelInds, codeTokenToGlobalToken[tokenLineToRealLine[i]], code);
+        var opcd = op != null ? op.toString(16) : "";
         out += (padding + opcd).substr(-4) + "\n";
     }
     if(failed){
-        //Fail entirely
-        return null;
+        var o = {};
+        o.errors = errors;
+        return o;
     }
-    return out;
+    var o = {};
+    o.code = out;
+    return o;
 }
 
-function decodeRegister(reg, line, code){
+function decodeRegister(reg, line, code, argnum){
     if(!reg.startsWith("r")){
-        logError("Error: register in incorrect format");
+        logError("Error: invalid register format in argument " + argnum);
+        logError("Valid registers are r0 - r7");
         errorPrintContext(code, line);
     }
     var out = parseInt(reg.split("r")[1]);
@@ -157,20 +186,48 @@ function createOp(line, lineNum, labels, codeLine, codeText){
     var op = instructions[line[0]];
     var schema = argTypes[op.type];
     if(line.length != (Object.keys(schema.args).length + 1)){
-        logError("Error! Invalid number of arguments for instruction " + line[0]);
+        logError("Error: Invalid number of arguments for instruction " + line[0]);
+        var erargs = [];
+        for(var key in schema.args){
+            switch(schema.args[key]){
+                case "reg": erargs.push("register"); break;
+                case "op": erargs.push("operator"); break;
+                case "addr": erargs.push("offset"); break;
+            }
+        }
+        logError(line[0] + " takes arguments " + erargs.join(", "));
+        logError("For additional help on the " + line[0] + " instruction, click " + "here".link("javascript:openHelp(\"" + line[0] + "\");"));
+        errorPrintContext(codeText, codeLine);
     }
     else if(op.type == "1regad"){
         var addr = line[2];
         var offset;
         if(isNaN(addr)){
+            if(labels[addr] == undefined){
+                if(!isNaN(addr.split("r")[1])){
+                    logError("Error: received register where constant expected");
+                }
+                else {
+                    logError("Error: undefined label " + addr);
+                }
+                errorPrintContext(codeText, codeLine);
+            }
             offset = labels[addr] - lineNum;
         }
         else{
-            offset = parseInt(addr);// - lineNum;
+            offset = parseInt(addr);
+        }
+        if(offset < -32 || offset > 31){
+            var errNum = addr;
+            if(isNaN(errNum)){
+                errNum += " (" + offset + ")";
+            }
+            logError("Error: branch offset out of range: " + errNum);
+            errorPrintContext(codeText, codeLine);
         }
         var left = offset & 7;
         var right = (offset >> 3) & 7;
-        return makeOperation(line[0], right, decodeRegister(line[1], codeLine, codeText), left);
+        return makeOperation(line[0], right, decodeRegister(line[1], codeLine, codeText, 1), left);
     }
     else{
         var args = [line[0]];
@@ -178,8 +235,28 @@ function createOp(line, lineNum, labels, codeLine, codeText){
         var i = 0;
         for(var key in schema.args){
             switch(schema.args[key]){
-                case "reg": mArgs[key] = decodeRegister(line[i + 1], codeLine, codeText); break;
-                case "op": if(parseInt(line[i + 1])){}; mArgs[key] = parseInt(line[i + 1]); break;
+                case "reg": mArgs[key] = decodeRegister(line[i + 1], codeLine, codeText, i); break;
+                case "op":  var val;
+                            if(isNaN(line[i + 1])){
+                                if(labels[line[i + 1]] == undefined){
+                                    if(!isNaN(line[i + 1].split("r")[1])){
+                                        logError("Error: received register where constant expected");
+                                    }
+                                    else {
+                                        logError("Error: undefined label " + line[i + 1]);
+                                    }
+                                    errorPrintContext(codeText, codeLine);
+                                }
+                                val = labels[line[i + 1]];
+                            }
+                            else{
+                                 val = parseInt(line[i + 1]);
+                            }
+                            if(val < 0 || val > 7){
+                                logError("Error: operator out of range: " + val + " (the supported range is 0 - 7)");
+                                errorPrintContext(codeText, codeLine);
+                            }
+                            mArgs[key] = parseInt(val); break;
             }
             i++;
         }
@@ -216,18 +293,21 @@ function errorPrintContext(str, line){
     if(line > 0){
         logError(lines[line - 1]);
     }
-    logError(lines[line]);
+    logError(">" + lines[line]);
     if(line < lines.length - 1){
         logError(lines[line + 1]);
     }
 }
 
 function logError(str){
-    console.log(str);
+    errors.push(str);
     failed = true;
 }
 
 function addToToken(tokens, char, next, newLine){
+    if(tokenLineToRealLine[tokens.length - 1] == undefined) {
+        tokenLineToRealLine[tokens.length - 1] = readLines;
+    }
     if(newLine){
         if(tokens[tokens.length - 1].length != 0){
             tokens[tokens.length] = [];
@@ -241,11 +321,4 @@ function addToToken(tokens, char, next, newLine){
         line[line.length] = "";
     }
     line[line.length - 1] += char;
-}
-
-function tokensNewLine(tokens){
-    if(tokens[tokens.length - 1].length == 0){
-        return;
-    }
-    tokens[tokens.length] = [];
 }

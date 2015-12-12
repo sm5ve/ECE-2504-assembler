@@ -21,20 +21,40 @@
     <script src="asm_mode.js"></script>
     <script src="interface.js"></script>
     <script src="emulator.js"></script>
+    <script src="help.js"></script>
     <link href="style.css" rel="stylesheet" media="all"/>
 </head>
 <body>
-    <div ng-controller="AssemblerController as asm" ng-init="asm.init()">
+    <div ng-controller="AssemblerController as asm" ng-init="asm.init()" class="code">
         <div id="assembler_code_entry" class="well well-lg asm_panel">
-            <textarea id="asm_code" class="code" ng-model="code"></textarea>
-            <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-default" ng-click="asm.assemble()">Assemble</button>
+            <div class="btn-group tool dark">
+                <button type="button" class="btn btn-default dropdown-toggle dark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Reference <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dark">
+                    <li ng-repeat="inst in asm.instructionList" class="dark"><a href="#" ng-click="asm.showHelp(inst)" class="dark">{{inst}}</a></li>
+                </ul>
             </div>
+            <button type="button" class="btn btn-default tool dark" ng-click="asm.assemble()">Assemble</button>
+            <ul class="nav nav-tabs">
+                <li role="presentation" ng-repeat="tab in asm.tabs track by $index" ng-class="{active: $index == asm.selectedTab}">
+                    <a ng-click="asm.selectTab($index)" href="javascript:void(0)" ng-if="$index != asm.selectedTab">{{tab.name}}</a>
+                    <div ng-if="$index == asm.selectedTab" class="centered">
+                        <input type="text" ng-model="tab.name" class="tab_name_input">
+                        <a href="javascript:void(0)" ng-click="asm.deleteTab($index)" ng-if="asm.tabs.length > 1">-</a>
+                    </div>
+                </li>
+                <li role="presentation"><a ng-click="asm.createTab('New tab', '')" href="javascript:void(0)"><b>+</b></a></li>
+            </ul>
+            <textarea id="asm_code" class="code" ng-model="code"></textarea>
             <div id="asm_output">
                     {{asm.code}}
                 <!--<div class="code_line" ng-repeat="l in asm.code.split('\n') track by $index">
                     {{l}}
                 </div>-->
+            </div>
+            <div id="errors" ng-bind-html="asm.errors">
+
             </div>
         </div>
     </div>

@@ -1,0 +1,15 @@
+<div class="modal-header">
+    <h3 class="modal-title">Help with {{inst}}</h3>
+</div>
+<div class="modal-body scrollable">
+    <accordion close-others="false">
+        <accordion-group heading="Explanation" is-open="true">
+            <div ng-bind-html="getDesc()"></div>
+        </accordion-group>
+        <accordion-group heading="Syntax" is-open="true">
+            <div class="code black">{{getSchema()}}</div>
+        </accordion-group>
+    </accordion>
+    <button type="button" class="btn btn-default" ng-click="openTab()">Load example</button>
+    <!--asm.createTab('LDI', LDI_example)-->
+</div>

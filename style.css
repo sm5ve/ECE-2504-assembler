@@ -9,6 +9,11 @@ body{
 
 .code{
     font-family: monospace;
+    color: #eeeeee;
+}
+
+.black{
+    color: #000000;
 }
 
 textarea{
@@ -27,12 +32,49 @@ textarea{
     border: none;
 }
 
-div{
-    color: #eeeeee;
-}
-
 #asm_output{
     padding-top: 5px;
     color: #eeeeee;
     white-space: pre-wrap;
+}
+
+#errors{
+    padding-top: 5px;
+    color: #ff9b8c;
+    white-space: pre-wrap;
+}
+
+.tab_name_input{
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    background-color: #333333;
+    border-radius: 3px;
+    border: none;
+    padding: -5px;
+}
+
+.centered{
+    vertical-align: middle;
+}
+
+.tool{
+    display: block;
+    float: right;
+    margin-right: 5px;
+}
+
+.dark{
+    background-color: #444444 !important;
+    border-color: #333333 !important;
+    color: #ffffff !important;
+}
+
+.dark:hover:not(.dropdown-menu),.dark.open > button{
+    background-color: #333333 !important;
+    border-color: #222222 !important;
+    color: #ffffff !important;
 }
