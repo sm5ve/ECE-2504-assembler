@@ -169,12 +169,12 @@ function assemble(code){
 }
 
 function decodeRegister(reg, line, code, argnum){
-    if(!reg.startsWith("r")){
+    if(!reg.toLowerCase().startsWith("r")){
         logError("Error: invalid register format in argument " + argnum);
         logError("Valid registers are r0 - r7");
         errorPrintContext(code, line);
     }
-    var out = parseInt(reg.split("r")[1]);
+    var out = parseInt(reg.toLowerCase().split("r")[1]);
     if(out > 7 || out < 0){
         logError("Error: invalid register index: " + out + " (the cpu only supports r0 - r7)");
         errorPrintContext(code, line);
@@ -204,7 +204,7 @@ function createOp(line, lineNum, labels, codeLine, codeText){
         var offset;
         if(isNaN(addr)){
             if(labels[addr] == undefined){
-                if(!isNaN(addr.split("r")[1])){
+                if(!isNaN(addr.toLowerCase().split("r")[1])){
                     logError("Error: received register where constant expected");
                 }
                 else {
@@ -239,7 +239,7 @@ function createOp(line, lineNum, labels, codeLine, codeText){
                 case "op":  var val;
                             if(isNaN(line[i + 1])){
                                 if(labels[line[i + 1]] == undefined){
-                                    if(!isNaN(line[i + 1].split("r")[1])){
+                                    if(!isNaN(line[i + 1].toLowerCase().split("r")[1])){
                                         logError("Error: received register where constant expected");
                                     }
                                     else {
