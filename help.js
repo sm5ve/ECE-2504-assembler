@@ -9,7 +9,11 @@ var desc = {
     "LDI": 'LDI, or load immediate allows one to store a constant number between 0 and 7 in a register. LDI is often used to initialize registers for ' +
     'an operation like <span class="code black">jmp</span>.',
     "INC": "INC, or increment, accepts "
-}
+};
+
+var syntax = {
+    "LDI": "destination register, operator"
+};
 
 asmctrl.controller('HelpController', function($scope, $sce, func){
 
@@ -18,7 +22,7 @@ asmctrl.controller('HelpController', function($scope, $sce, func){
     };
 
     $scope.getSchema = function(){
-        var schema = argTypes[instructions[func.toUpperCase()].type];
+        /*var schema = argTypes[instructions[func.toUpperCase()].type];
         var erargs = [];
         for(var key in schema.args){
             switch(schema.args[key]){
@@ -27,7 +31,8 @@ asmctrl.controller('HelpController', function($scope, $sce, func){
                 case "addr": erargs.push("offset"); break;
             }
         }
-        return func + " " + erargs.join(" ");
+        return func + " " + erargs.join(" ");*/
+        return func + " " + syntax[func];
     };
 
     $scope.openTab = function(){
