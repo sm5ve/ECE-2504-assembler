@@ -3,6 +3,11 @@
  */
 
 var asmctrl = angular.module('assembler', ['ui.bootstrap', 'ngSanitize']);
+
+asmctrl.config(['$sceProvider',function($sceProvider){
+    $sceProvider.enabled(false);
+}]);
+
 var modal;
 var modalInstance;
 var LDI_example = "TEST";
