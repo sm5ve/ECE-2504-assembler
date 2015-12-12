@@ -25,7 +25,7 @@ asmctrl.controller('HelpController', function($scope, $sce, func){
         return $sce.trustAsHtml(exp[func]);
     };
     
-    $scope.getExp = function(){
+    $scope.getDesc = function(){
         return $sce.trustAsHtml(desc[func]);
     };
 
