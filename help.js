@@ -16,7 +16,7 @@ var desc = {
 };
 
 var syntax = {
-    "LDI": "destination register, operator"
+    "1regop": "destination register, operator"
 };
 
 asmctrl.controller('HelpController', function($scope, $sce, func){
@@ -40,7 +40,7 @@ asmctrl.controller('HelpController', function($scope, $sce, func){
             }
         }
         return func + " " + erargs.join(" ");*/
-        return func + " " + syntax[func];
+        return func + " " + syntax[instructions[func.toUpperCase()].type];
     };
 
     $scope.openTab = function(){
