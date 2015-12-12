@@ -17,6 +17,7 @@ asmctrl.controller('AssemblerController', function($scope, $sce, $modal) {
     this.selectedTab = 0;
     this.instructionList = Object.keys(instructions);
     this.init = function(){
+        $sce.trustAsUrl('template/modal/backdrop.html');
         //this.cm = CodeMirror(document.getElementById("assembler_code_entry"))
         //cm.defineMode("asm", highlightASM)
     }
@@ -63,3 +64,4 @@ asmctrl.controller('AssemblerController', function($scope, $sce, $modal) {
 
     this.showHelp = openHelp;
 });
+

@@ -7,7 +7,8 @@ var examples = {
 
 var desc = {
     "LDI": 'LDI, or load immediate allows one to store a constant number between 0 and 7 in a register. LDI is often used to initialize registers for ' +
-    'an operation like <span class="code black">jmp</span>.'
+    'an operation like <span class="code black">jmp</span>.',
+    "INC": "INC, or increment, accepts "
 }
 
 asmctrl.controller('HelpController', function($scope, $sce, func){
