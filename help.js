@@ -49,7 +49,7 @@ asmctrl.controller('HelpController', function($scope, $sce, func){
     }
 
     $scope.inst = func;
-    $scope.opcode = instructions[func].opcode
+    $scope.opcode = instructions[func].opcode.toString(2);
 });
 
 function openHelp(helpFunc){
