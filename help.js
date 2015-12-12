@@ -16,7 +16,8 @@ var desc = {
 };
 
 var syntax = {
-    "1regop": "destination register, operator"
+    "1regop": "DR, OP",
+    "2regf": "DR, RA"
 };
 
 asmctrl.controller('HelpController', function($scope, $sce, func){
