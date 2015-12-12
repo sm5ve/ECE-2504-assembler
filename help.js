@@ -12,7 +12,7 @@ var exp = {
 };
 
 var desc = {
-    "LDI": '<br> R[DR]←zf OP; PC ← PC +1 <br>'
+    "LDI": 'R[DR]←zf OP; PC ← PC +1'
 };
 
 var syntax = {
