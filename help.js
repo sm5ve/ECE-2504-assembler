@@ -5,10 +5,14 @@ var examples = {
     "LDI": "//"
 };
 
-var desc = {
-    "LDI": 'LDI, or load immediate allows one to store a constant number between 0 and 7 in a register.<br> R[DR]←zf OP; PC ← PC +1 <br>  LDI is often used to initialize registers for ' +
+var exp = {
+    "LDI": 'LDI, or load immediate allows one to store a constant number between 0 and 7 in a register. LDI is often used to initialize registers for ' +
     'an operation like <span class="code black">jmp</span>.',
     "INC": "INC, or increment, accepts "
+};
+
+var desc = {
+    "LDI": '<br> R[DR]←zf OP; PC ← PC +1 <br>'
 };
 
 var syntax = {
@@ -17,7 +21,11 @@ var syntax = {
 
 asmctrl.controller('HelpController', function($scope, $sce, func){
 
-    $scope.getDesc = function(){
+    $scope.getExp = function(){
+        return $sce.trustAsHtml(exp[func]);
+    };
+    
+    $scope.getExp = function(){
         return $sce.trustAsHtml(desc[func]);
     };
 
@@ -41,6 +49,7 @@ asmctrl.controller('HelpController', function($scope, $sce, func){
     }
 
     $scope.inst = func;
+    $scope.opcode = instructions[func].opcode
 });
 
 function openHelp(helpFunc){
