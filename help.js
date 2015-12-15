@@ -20,14 +20,31 @@ var syntax = {
     "2regf": "DR, RA"
 };
 
+var keyWords = {
+    "DR": "Destination register"
+};
+
+String.prototype.repl = function(tok, rep){
+    return this.split(tok).join(rep);
+};
+
+function addKeywordTags(str){
+    var out = str;
+    for(var ki in Object.keys(keyWords)){
+        var key = Object.keys(keyWords)[ki];
+        out = out.repl(key, "<span class=\"helpToolTip\" title=\"" + keyWords[key] + "\">" + key + "</span>");
+    }
+    return out;
+}
+
 asmctrl.controller('HelpController', function($scope, $sce, func){
 
     $scope.getExp = function(){
-        return $sce.trustAsHtml(exp[func]);
+        return $sce.trustAsHtml(addKeywordTags(exp[func]));
     };
     
     $scope.getDesc = function(){
-        return $sce.trustAsHtml(desc[func]);
+        return $sce.trustAsHtml(addKeywordTags(desc[func]));
     };
 
     $scope.getSchema = function(){
@@ -41,7 +58,7 @@ asmctrl.controller('HelpController', function($scope, $sce, func){
             }
         }
         return func + " " + erargs.join(" ");*/
-        return func + " " + syntax[instructions[func.toUpperCase()].type];
+        return addKeywordTags(func + " " + syntax[instructions[func.toUpperCase()].type]);
     };
 
     $scope.openTab = function(){
@@ -65,4 +82,5 @@ function openHelp(helpFunc){
             }
         }
     });
+    window.setTimeout(function(){$(".helpToolTip").tooltip()}, 10);
 }

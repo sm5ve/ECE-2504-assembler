@@ -46,7 +46,7 @@
                 </li>
                 <li role="presentation"><a ng-click="asm.createTab('New tab', '')" href="javascript:void(0)"><b>+</b></a></li>
             </ul>
-            <textarea id="asm_code" class="code" ng-model="code"></textarea>
+            <textarea id="asm_code" class="code" ng-model="code" title="Some code"></textarea>
             <div id="asm_output">
                     {{asm.code}}
                 <!--<div class="code_line" ng-repeat="l in asm.code.split('\n') track by $index">

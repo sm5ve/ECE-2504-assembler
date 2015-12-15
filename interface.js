@@ -70,3 +70,12 @@ asmctrl.controller('AssemblerController', function($scope, $sce, $modal) {
     this.showHelp = openHelp;
 });
 
+/*asmctrl.directive('tooltip', ['$timeout', function ($timeout) {
+    return {
+        link: function ($scope, element, attrs) {
+            $scope.$on('dataloaded', function () {
+                console.log(element);
+            })
+        }
+    };
+}]);*/
