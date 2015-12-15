@@ -170,14 +170,11 @@ function assemble(code){
 
 function decodeRegister(reg, line, code, argnum){
     if(!reg.toLowerCase().startsWith("r")){
-        logError("Error: invalid register format in argument " + argnum);
-        logError("Valid registers are r0 - r7");
-        errorPrintContext(code, line);
+        printInstArgErr(code, line, argnum, "Error: invalid register format\nValid registers are r0 - r7");
     }
     var out = parseInt(reg.toLowerCase().split("r")[1]);
     if(out > 7 || out < 0){
-        logError("Error: invalid register index: " + out + " (the cpu only supports r0 - r7)");
-        errorPrintContext(code, line);
+        printInstArgErr(code, line, argnum, "Error: invalid register index: " + out + " (the cpu only supports r0 - r7)");
     }
     return out;
 }
@@ -205,12 +202,11 @@ function createOp(line, lineNum, labels, codeLine, codeText){
         if(isNaN(addr)){
             if(labels[addr] == undefined){
                 if(!isNaN(addr.toLowerCase().split("r")[1])){
-                    logError("Error: received register where constant expected");
+                    printInstArgErr(codeText, codeLine, 1, "Error: received register where constant expected");
                 }
                 else {
-                    logError("Error: undefined label " + addr);
+                    printInstArgErr(codeText, codeLine, 1, "Error: undefined label " + addr);
                 }
-                errorPrintContext(codeText, codeLine);
             }
             offset = labels[addr] - lineNum;
         }
@@ -222,8 +218,7 @@ function createOp(line, lineNum, labels, codeLine, codeText){
             if(isNaN(errNum)){
                 errNum += " (" + offset + ")";
             }
-            logError("Error: branch offset out of range: " + errNum);
-            errorPrintContext(codeText, codeLine);
+            printInstArgErr(codeText, codeLine, 1, "Error: branch offset out of range: " + errNum);
         }
         var left = offset & 7;
         var right = (offset >> 3) & 7;
@@ -240,12 +235,11 @@ function createOp(line, lineNum, labels, codeLine, codeText){
                             if(isNaN(line[i + 1])){
                                 if(labels[line[i + 1]] == undefined){
                                     if(!isNaN(line[i + 1].toLowerCase().split("r")[1])){
-                                        logError("Error: received register where constant expected");
+                                        printInstArgErr(codeText, codeLine, i, "Error: received register where constant expected");
                                     }
                                     else {
-                                        logError("Error: undefined label " + line[i + 1]);
+                                        printInstArgErr(codeText, codeLine, i, "Error: undefined label " + line[i + 1]);
                                     }
-                                    errorPrintContext(codeText, codeLine);
                                 }
                                 val = labels[line[i + 1]];
                             }
@@ -253,8 +247,7 @@ function createOp(line, lineNum, labels, codeLine, codeText){
                                  val = parseInt(line[i + 1]);
                             }
                             if(val < 0 || val > 7){
-                                logError("Error: operator out of range: " + val + " (the supported range is 0 - 7)");
-                                errorPrintContext(codeText, codeLine);
+                                printInstArgErr(codeText, codeLine, i, "Error: operator out of range: " + val + " (the supported range is 0 - 7)");
                             }
                             mArgs[key] = parseInt(val); break;
             }
@@ -286,6 +279,20 @@ function makeOperation(opcode, arg1, source, arg2){
         logError("Error: undefined opcode");
     }
     return ((instructions[opcode].opcode & 127) << 9 )| ((arg1 & 7) << 6) | ((source & 7) << 3) | (arg2 & 7);
+}
+
+function printInstArgErr(str, line, argNum, errorText){
+    logError(errorText);
+    var lines = str.split("\n");
+    if(line > 0){
+        logError(lines[line - 1]);
+    }
+    var probLine = lines[line].split(" ");
+    probLine[argNum + 1] = "<b>" + probLine[argNum + 1] + "</b>";
+    logError(">" + probLine.join(" "));
+    if(line < lines.length - 1){
+        logError(lines[line + 1]);
+    }
 }
 
 function errorPrintContext(str, line){
