@@ -284,6 +284,8 @@ function makeOperation(opcode, arg1, source, arg2){
 function printInstArgErr(str, line, argNum, errorText){
     logError(errorText);
     var lines = str.split("\n");
+    var inst = lines[line].split(" ")[0];
+    logError("For additional help on the " + inst + " instruction, click " + "here".link("javascript:openHelp(\"" + inst + "\");"));
     if(line > 0){
         logError(lines[line - 1]);
     }
