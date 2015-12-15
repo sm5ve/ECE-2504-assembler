@@ -23,13 +23,13 @@ asmctrl.controller('AssemblerController', function($scope, $sce, $modal) {
     this.instructionList = Object.keys(instructions);
     this.init = function(){
         $sce.trustAsUrl('template/modal/backdrop.html');
-        //this.cm = CodeMirror(document.getElementById("assembler_code_entry"))
-        //cm.defineMode("asm", highlightASM)
+        //this.cm = CodeMirror(document.getElementById("asm_code_mirror"), {mode: "asm"});
+        //CodeMirror.defineMode("asm", highlightASM);
     }
 
     this.assemble = function(){
         //alert(this.cm.getValue())
-        var code = getCode();
+        var code = this.getCode();
         var asm = assemble(code);
         if(asm.code != undefined){
             this.code = asm.code;
@@ -57,12 +57,12 @@ asmctrl.controller('AssemblerController', function($scope, $sce, $modal) {
         $scope.code = this.tabs[this.selectedTab].code;
     }
 
-    function getCode(){
+    this.getCode = function(){
         return $scope.code;
     }
 
     this.selectTab = function(index){
-        this.tabs[this.selectedTab].code = getCode();
+        this.tabs[this.selectedTab].code = this.getCode();
         $scope.code = this.tabs[index].code;
         this.selectedTab = index;
     }

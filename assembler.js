@@ -222,7 +222,7 @@ function createOp(line, lineNum, labels, codeLine, codeText){
         }
         var left = offset & 7;
         var right = (offset >> 3) & 7;
-        return makeOperation(line[0], right, decodeRegister(line[1], codeLine, codeText, 1), left);
+        return makeOperation(line[0], right, decodeRegister(line[1], codeLine, codeText, 0), left);
     }
     else{
         var args = [line[0]];
