@@ -78,3 +78,7 @@ textarea{
     border-color: #222222 !important;
     color: #ffffff !important;
 }
+
+.helpToolTip{
+    text-decoration: underline;
+}

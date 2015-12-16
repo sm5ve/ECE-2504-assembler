@@ -58,7 +58,7 @@ asmctrl.controller('HelpController', function($scope, $sce, func){
             }
         }
         return func + " " + erargs.join(" ");*/
-        return addKeywordTags(func + " " + syntax[instructions[func.toUpperCase()].type]);
+        return $sce.trustAsHtml(addKeywordTags(func + " " + syntax[instructions[func.toUpperCase()].type]));
     };
 
     $scope.openTab = function(){
@@ -82,5 +82,5 @@ function openHelp(helpFunc){
             }
         }
     });
-    window.setTimeout(function(){$(".helpToolTip").tooltip()}, 10);
+    window.setTimeout(function(){$(".helpToolTip").tooltip()}, 50);
 }
