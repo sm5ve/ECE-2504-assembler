@@ -69,8 +69,8 @@ asmctrl.controller('HelpController', function($scope, $sce, func){
         modalInstance.close();
     }
 
-    $scope.inst = func;
-    $scope.opcode = instructions[func].opcode.toString(2);
+    $scope.inst = func.toUpperCase();
+    $scope.opcode = instructions[func.toUpperCase()].opcode.toString(2);
 });
 
 function openHelp(helpFunc){
