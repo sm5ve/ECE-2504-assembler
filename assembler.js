@@ -154,7 +154,7 @@ function assemble(code){
     var out = "\n";
     var padding = "0000";
     for(var i = 0; i < codeTokens.length; i++){
-        var op = createOp(codeTokens[i], i, labelInds, codeTokenToGlobalToken[tokenLineToRealLine[i]], code);
+        var op = createOp(codeTokens[i], i, labelInds, tokenLineToRealLine[codeTokenToGlobalToken[i]], code);
         var opcd = op != null ? op.toString(16) : "";
         out += (padding + opcd).substr(-4) + "\n";
     }
@@ -284,6 +284,7 @@ function makeOperation(opcode, arg1, source, arg2){
 function printInstArgErr(str, line, argNum, errorText){
     logError(errorText);
     var lines = str.split("\n");
+    //debugger;
     var inst = lines[line].split(" ")[0];
     logError("For additional help on the " + inst + " instruction, click " + "here".link("javascript:openHelp(\"" + inst + "\");"));
     if(line > 0){

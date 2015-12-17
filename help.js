@@ -29,6 +29,9 @@ String.prototype.repl = function(tok, rep){
 };
 
 function addKeywordTags(str){
+    if(!str instanceof String){
+        debugger;
+    }
     var out = str;
     for(var ki in Object.keys(keyWords)){
         var key = Object.keys(keyWords)[ki];
