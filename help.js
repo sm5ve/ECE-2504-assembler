@@ -21,7 +21,9 @@ var syntax = {
 };
 
 var keyWords = {
-    "DR": "Destination register"
+    "DR": "Destination register",
+    "SA": "Source register A",
+    "OP": "Operand (0-7)"
 };
 
 String.prototype.repl = function(tok, rep){
