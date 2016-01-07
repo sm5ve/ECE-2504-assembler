@@ -82,3 +82,14 @@ textarea{
 .helpToolTip{
     text-decoration: underline;
 }
+
+.errored{
+    color: rgb(227, 27, 27);
+}
+#credit{
+    background-color: rgba(0, 0, 0, 0.25);
+    width: 100%;
+    position: fixed;
+    clear: both;
+    bottom: 0;
+}

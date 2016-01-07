@@ -172,6 +172,9 @@ function decodeRegister(reg, line, code, argnum){
     if(!reg.toLowerCase().startsWith("r")){
         printInstArgErr(code, line, argnum, "Error: invalid register format\nValid registers are r0 - r7");
     }
+    if(isNaN(reg.toLowerCase().split("r")[1]) || reg.toLowerCase().split("r").length != 2 || reg.toLowerCase().split("r")[1] == ""){
+        printInstArgErr(code, line, argnum, "Error: missing register index (the cpu only supports r0 - r7)");
+    }
     var out = parseInt(reg.toLowerCase().split("r")[1]);
     if(out > 7 || out < 0){
         printInstArgErr(code, line, argnum, "Error: invalid register index: " + out + " (the cpu only supports r0 - r7)");
@@ -291,7 +294,7 @@ function printInstArgErr(str, line, argNum, errorText){
         logError(lines[line - 1]);
     }
     var probLine = lines[line].split(" ");
-    probLine[argNum + 1] = "<b>" + probLine[argNum + 1] + "</b>";
+    probLine[argNum + 1] = "<b class=\"errored\">" + probLine[argNum + 1] + "</b>";
     logError(">" + probLine.join(" "));
     if(line < lines.length - 1){
         logError(lines[line + 1]);

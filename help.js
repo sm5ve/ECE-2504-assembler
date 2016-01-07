@@ -61,6 +61,11 @@ asmctrl.controller('HelpController', function($scope, $sce, func){
             }
         }
         return func + " " + erargs.join(" ");*/
+        //TODO move to line on error
+        //FIXME improve bootstrap tooltip code
+        //TODO save files
+        //TODO implement relationship between asm and binary
+        //TODO maybe integrate above into emulator...
         return $sce.trustAsHtml(addKeywordTags(func + " " + syntax[instructions[func.toUpperCase()].type]));
     };
 
