@@ -35,7 +35,9 @@ textarea{
 #asm_output{
     padding-top: 5px;
     color: #eeeeee;
-    white-space: pre-wrap;
+    height: 100%;
+    background-color: transparent;
+    border-color: transparent;
 }
 
 #errors{
@@ -92,4 +94,36 @@ textarea{
     position: fixed;
     clear: both;
     bottom: 0;
+}
+
+#asm_output {
+    line-height: 0;
+    counter-reset: line -1;
+}
+
+#asm_output span {
+    display: block;
+    line-height: 1.5rem;
+}
+
+#asm_output span::before {
+    content: counter(line);
+    counter-increment: line;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* IE/Edge */
+    user-select: none;
+    display: inline-block;
+    border-right: 1px solid #ddd;
+    padding: 0 .5em;
+    margin-right: .5em;
+    color: #888;
+    width: 50px;
+}
+
+.vert_scroll{
+    overflow-y: scroll;
+    height:400px;
 }

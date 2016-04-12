@@ -37,6 +37,7 @@ function addKeywordTags(str){
         var key = Object.keys(keyWords)[ki];
         out = out.repl(key, "<span class=\"helpToolTip\" title=\"" + keyWords[key] + "\">" + key + "</span>");
     }
+    window.setTimeout(function(){$(".helpToolTip").tooltip()}, 0);
     return out;
 }
 
@@ -51,21 +52,6 @@ asmctrl.controller('HelpController', function($scope, $sce, func){
     };
 
     $scope.getSchema = function(){
-        /*var schema = argTypes[instructions[func.toUpperCase()].type];
-        var erargs = [];
-        for(var key in schema.args){
-            switch(schema.args[key]){
-                case "reg": erargs.push("register"); break;
-                case "op": erargs.push("operator"); break;
-                case "addr": erargs.push("offset"); break;
-            }
-        }
-        return func + " " + erargs.join(" ");*/
-        //TODO move to line on error
-        //FIXME improve bootstrap tooltip code
-        //TODO save files
-        //TODO implement relationship between asm and binary
-        //TODO maybe integrate above into emulator...
         return $sce.trustAsHtml(addKeywordTags(func + " " + syntax[instructions[func.toUpperCase()].type]));
     };
 
@@ -76,6 +62,7 @@ asmctrl.controller('HelpController', function($scope, $sce, func){
 
     $scope.inst = func.toUpperCase();
     $scope.opcode = instructions[func.toUpperCase()].opcode.toString(2);
+    $(".helpToolTip").tooltip();
 });
 
 function openHelp(helpFunc){
@@ -90,5 +77,4 @@ function openHelp(helpFunc){
             }
         }
     });
-    window.setTimeout(function(){$(".helpToolTip").tooltip()}, 50);
 }

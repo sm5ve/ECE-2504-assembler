@@ -50,13 +50,11 @@
 
             </div-->
             <textarea id="asm_code" class="code" ng-model="code"></textarea>
-            <div id="asm_output">
+            <div class="vert_scroll" ng-if="asm.codeArr != null"><pre id="asm_output"><a ng-repeat="inst in asm.codeArr track by $index" ng-click="asm.gotoLine($index)"><span>{{inst + "\n"}}</span></a></pre></div>
+            <!--div id="asm_output">
                     {{asm.code}}
-                <!--<div class="code_line" ng-repeat="l in asm.code.split('\n') track by $index">
-                    {{l}}
-                </div>-->
-            </div>
-            <div id="errors" ng-bind-html="asm.errors">
+            </div-->
+            <div id="errors" ng-bind-html="asm.errors" ng-show="asm.errors != null && asm.errors.length > 0" class="vert_scroll">
 
             </div>
         </div>

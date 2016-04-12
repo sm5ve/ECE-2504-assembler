@@ -165,6 +165,10 @@ function assemble(code){
     }
     var o = {};
     o.code = out;
+    o.lines = [];
+    for(var i = 0; i < codeTokens.length; i++){
+        o.lines[i] = tokenLineToRealLine[codeTokenToGlobalToken[i]];
+    }
     return o;
 }
 
@@ -295,7 +299,7 @@ function printInstArgErr(str, line, argNum, errorText){
     }
     var probLine = lines[line].split(" ");
     probLine[argNum + 1] = "<b class=\"errored\">" + probLine[argNum + 1] + "</b>";
-    logError(">" + probLine.join(" "));
+    logError('<a onclick="asm.gotoRawLine(' + line + ')">>' + probLine.join(" ") + '</a>');
     if(line < lines.length - 1){
         logError(lines[line + 1]);
     }
