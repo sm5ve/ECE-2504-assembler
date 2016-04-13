@@ -61,7 +61,7 @@ asmctrl.controller('AssemblerController', function($scope, $sce, $modal) {
     this.instructionList = Object.keys(instructions);
     this.init = function(){
         $sce.trustAsUrl('template/modal/backdrop.html');
-        this.tabs = JSON.parse(readCookie("tabs"));
+        this.tabs = JSON.parse(readCookie("tabs")) || this.tabs;
         $scope.code = this.tabs[this.selectedTab].code;
         console.log(this.tabs);
         //this.cm = CodeMirror(document.getElementById("asm_code_mirror"), {mode: "asm"});
