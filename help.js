@@ -61,7 +61,7 @@ asmctrl.controller('HelpController', function($scope, $sce, func){
     }
 
     $scope.inst = func.toUpperCase();
-    $scope.opcode = instructions[func.toUpperCase()].opcode.toString(2);
+    $scope.opcode = ("0000000" + instructions[func.toUpperCase()].opcode.toString(2)).substr(-7);
     $(".helpToolTip").tooltip();
 });
 

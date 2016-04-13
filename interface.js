@@ -22,6 +22,32 @@ var modal;
 var modalInstance;
 var LDI_example = "TEST";
 var asm;
+
+function createCookie(name,value,days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime()+(days*24*60*60*1000));
+        var expires = "; expires="+date.toGMTString();
+    }
+    else var expires = "";
+    document.cookie = name+"="+value+expires+"; path=/";
+}
+
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
+function eraseCookie(name) {
+    createCookie(name,"",-1);
+}
+
 asmctrl.controller('AssemblerController', function($scope, $sce, $modal) {
     asm = this;
     modal = $modal;
@@ -30,11 +56,14 @@ asmctrl.controller('AssemblerController', function($scope, $sce, $modal) {
     this.code = null;
     this.codeArr = null;
     this.codeLines = null;
-    this.tabs = [{"name": "Workspace 1", "code": "FOOBAR"}];
+    this.tabs = [{"name": "Workspace 1"}];
     this.selectedTab = 0;
     this.instructionList = Object.keys(instructions);
     this.init = function(){
         $sce.trustAsUrl('template/modal/backdrop.html');
+        this.tabs = JSON.parse(readCookie("tabs"));
+        $scope.code = this.tabs[this.selectedTab].code;
+        console.log(this.tabs);
         //this.cm = CodeMirror(document.getElementById("asm_code_mirror"), {mode: "asm"});
         //CodeMirror.defineMode("asm", highlightASM);
     }
@@ -59,6 +88,7 @@ asmctrl.controller('AssemblerController', function($scope, $sce, $modal) {
 
     this.createTab = function(name, text){
         this.tabs.push({"name": name, "code": text});
+        this.save();
         return this.tabs.length - 1;
     };
 
@@ -71,6 +101,7 @@ asmctrl.controller('AssemblerController', function($scope, $sce, $modal) {
             this.selectedTab = this.tabs.length - 1;
         }
         $scope.code = this.tabs[this.selectedTab].code;
+        this.save()
     }
 
     this.getCode = function(){
@@ -144,14 +175,9 @@ asmctrl.controller('AssemblerController', function($scope, $sce, $modal) {
 
         return false;
     }
-});
 
-/*asmctrl.directive('tooltip', ['$timeout', function ($timeout) {
-    return {
-        link: function ($scope, element, attrs) {
-            $scope.$on('dataloaded', function () {
-                console.log(element);
-            })
-        }
-    };
-}]);*/
+    this.save = function(){
+        this.tabs[this.selectedTab].code = this.getCode();
+        createCookie("tabs", JSON.stringify(this.tabs))
+    }
+});

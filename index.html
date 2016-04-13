@@ -49,7 +49,7 @@
             <!--div id="asm_code_mirror">
 
             </div-->
-            <textarea id="asm_code" class="code" ng-model="code"></textarea>
+            <textarea id="asm_code" class="code" ng-model="code" ng-change="asm.save()"></textarea>
             <div class="vert_scroll" ng-if="asm.codeArr != null"><pre id="asm_output"><a ng-repeat="inst in asm.codeArr track by $index" ng-click="asm.gotoLine($index)"><span>{{inst + "\n"}}</span></a></pre></div>
             <!--div id="asm_output">
                     {{asm.code}}
