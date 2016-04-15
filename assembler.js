@@ -36,7 +36,7 @@ var argTypes = {
 var macros = {};
 
 var failed = false;
-var labelsEnabled = true;
+var labelsEnabled = false;
 var errors = [];
 var readLines;
 var tokenLineToRealLine;
