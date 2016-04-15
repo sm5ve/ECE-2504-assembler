@@ -129,8 +129,12 @@ function assemble(code){
             codeTokens[codeTokens.length] = line;
             codeTokenToGlobalToken.push(i);
         }
-        else if(line[line.length - 1].endsWith(":") && labelsEnabled){
-            if(line.length > 1){
+        else if(line[line.length - 1].endsWith(":")){
+            if(!labelsEnabled){
+                logError("Error: Labels not enabled. Please consult your professor to learn more.");
+                errorPrintContext(code, tokenLineToRealLine[i]);
+            }
+            else if(line.length > 1){
                 logError("Invalid label identifier on line " + tokenLineToRealLine[i]);
                 logError("Labels can only contain 1 word");
                 errorPrintContext(code, tokenLineToRealLine[i]);
