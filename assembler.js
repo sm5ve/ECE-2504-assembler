@@ -125,19 +125,24 @@ function assemble(code){
             codeTokens[codeTokens.length] = line;
             codeTokenToGlobalToken.push(i);
         }
-        else if(line[line.length - 1].endsWith(":") && labelsEnabled){
-            if(line.length > 1){
-                logError("Invalid label identifier on line " + tokenLineToRealLine[i]);
-                logError("Labels can only contain 1 word");
-                errorPrintContext(code, tokenLineToRealLine[i]);
+        else if(line[line.length - 1].endsWith(":")){
+            if(!labelsEnabled){
+                logError("Error: labels not enabled");    
             }
-            else {
-                if (labelInds[line[0].split(":")[0]] != undefined) {
-                    logError("Error: attempted to redefine label: " + line[0].split(":")[0]);
+            else{
+                if(line.length > 1){
+                    logError("Invalid label identifier on line " + tokenLineToRealLine[i]);
+                    logError("Labels can only contain 1 word");
                     errorPrintContext(code, tokenLineToRealLine[i]);
                 }
                 else {
-                    labelInds[line[0].split(":")[0]] = codeTokens.length;
+                if (labelInds[line[0].split(":")[0]] != undefined) {
+                        logError("Error: attempted to redefine label: " + line[0].split(":")[0]);
+                        errorPrintContext(code, tokenLineToRealLine[i]);
+                    }
+                    else {
+                        labelInds[line[0].split(":")[0]] = codeTokens.length;
+                    }
                 }
             }
         }
