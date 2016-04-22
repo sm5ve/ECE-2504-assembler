@@ -45,7 +45,6 @@ function assemble(code){
     errors = [];
     failed = false;
     code += "\n";
-    f
     tokenLineToRealLine = [];
     tokens[0] = [];
     readLines = 0;
