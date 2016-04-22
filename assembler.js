@@ -49,6 +49,8 @@ function assemble(code){
     tokenLineToRealLine = [];
     tokens[0] = [];
     readLines = 0;
+    var inLineComment = false;
+    var inExtComment = false;
     for(var i = 0; i < code.length; i++){
         if(code[i] == "\n"){
             inLineComment = false;
