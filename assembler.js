@@ -45,11 +45,7 @@ function assemble(code){
     errors = [];
     failed = false;
     code += "\n";
-    var inLineComment = false;
-    var inExtComment = false;
-    var nextToken = false;
-    var nextLine = false;
-    var tokens = [];
+    f
     tokenLineToRealLine = [];
     tokens[0] = [];
     readLines = 0;
