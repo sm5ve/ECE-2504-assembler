@@ -51,6 +51,8 @@ function assemble(code){
     readLines = 0;
     var inLineComment = false;
     var inExtComment = false;
+    var nextToken;
+    var nextLine;
     for(var i = 0; i < code.length; i++){
         if(code[i] == "\n"){
             inLineComment = false;
