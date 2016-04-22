@@ -41,6 +41,7 @@ var errors = [];
 var readLines;
 var tokenLineToRealLine;
 function assemble(code){
+    var tokens = [];
     var inlineLabels = 0;
     errors = [];
     failed = false;
