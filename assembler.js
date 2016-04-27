@@ -17,7 +17,7 @@ var instructions = {
     "LDI": {"opcode": 76, "type": "1regop"},
     "ADI": {"opcode": 66, "type": "2regop"},
     "LD": {"opcode": 16, "type": "2regf"},
-    "ST": {"opcode": 32, "type": "2regl"},
+    "ST": {"opcode": 32, "type": "2regnod"},
     "BRZ": {"opcode": 96, "type": "1regad"},
     "BRN": {"opcode": 97, "type": "1regad"},
     "JMP": {"opcode": 112, "type": "1reg"}
@@ -30,8 +30,10 @@ var argTypes = {
     "1regop": {"args": {"rd": "reg", "op": "op"}, "ord": ["rd", 0, "op"]},
     "2regop": {"args": {"rd": "reg", "ra": "reg", "op": "op"}, "ord": ["rd", "ra", "op"]},
     "1reg": {"args": {"rd": "reg"}, "ord": [0, 0, "rd"]},
-    "1regad": {"args": {"rd": "reg", "addr": "addr"}, "ord": ["addr", "rd", "addr"]}
+    "1regad": {"args": {"rd": "reg", "addr": "addr"}, "ord": ["addr", "rd", "addr"]},
+    "2regnod": {"args": {"ra": "reg", "rb": "reg"}, "ord": [0, "ra", "rb"]}
 }
+
 
 var macros = {};
 
