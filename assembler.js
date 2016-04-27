@@ -17,7 +17,7 @@ var instructions = {
     "LDI": {"opcode": 76, "type": "1regop"},
     "ADI": {"opcode": 66, "type": "2regop"},
     "LD": {"opcode": 16, "type": "2regf"},
-    "ST": {"opcode": 32, "type": "2regl"},
+    "ST": {"opcode": 32, "type": "2regnod"},
     "BRZ": {"opcode": 96, "type": "1regad"},
     "BRN": {"opcode": 97, "type": "1regad"},
     "JMP": {"opcode": 112, "type": "1reg"}
@@ -30,8 +30,10 @@ var argTypes = {
     "1regop": {"args": {"rd": "reg", "op": "op"}, "ord": ["rd", 0, "op"]},
     "2regop": {"args": {"rd": "reg", "ra": "reg", "op": "op"}, "ord": ["rd", "ra", "op"]},
     "1reg": {"args": {"rd": "reg"}, "ord": [0, 0, "rd"]},
-    "1regad": {"args": {"rd": "reg", "addr": "addr"}, "ord": ["addr", "rd", "addr"]}
+    "1regad": {"args": {"rd": "reg", "addr": "addr"}, "ord": ["addr", "rd", "addr"]},
+    "2regnod": {"args": {"ra": "reg", "rb": "reg"}, "ord": [0, "ra", "rb"]}
 }
+
 
 var macros = {};
 
@@ -41,18 +43,18 @@ var errors = [];
 var readLines;
 var tokenLineToRealLine;
 function assemble(code){
-    var tokens = [];
     var inlineLabels = 0;
     errors = [];
     failed = false;
     code += "\n";
+    var inLineComment = false;
+    var inExtComment = false;
+    var nextToken = false;
+    var nextLine = false;
+    var tokens = [];
     tokenLineToRealLine = [];
     tokens[0] = [];
     readLines = 0;
-    var inLineComment = false;
-    var inExtComment = false;
-    var nextToken;
-    var nextLine;
     for(var i = 0; i < code.length; i++){
         if(code[i] == "\n"){
             inLineComment = false;
@@ -131,22 +133,21 @@ function assemble(code){
         }
         else if(line[line.length - 1].endsWith(":")){
             if(!labelsEnabled){
-                logError("Error: labels not enabled");    
+                logError("Error: Labels not enabled. Please consult your professor to learn more.");
+                errorPrintContext(code, tokenLineToRealLine[i]);
             }
-            else{
-                if(line.length > 1){
-                    logError("Invalid label identifier on line " + tokenLineToRealLine[i]);
-                    logError("Labels can only contain 1 word");
+            else if(line.length > 1){
+                logError("Invalid label identifier on line " + tokenLineToRealLine[i]);
+                logError("Labels can only contain 1 word");
+                errorPrintContext(code, tokenLineToRealLine[i]);
+            }
+            else {
+                if (labelInds[line[0].split(":")[0]] != undefined) {
+                    logError("Error: attempted to redefine label: " + line[0].split(":")[0]);
                     errorPrintContext(code, tokenLineToRealLine[i]);
                 }
                 else {
-                if (labelInds[line[0].split(":")[0]] != undefined) {
-                        logError("Error: attempted to redefine label: " + line[0].split(":")[0]);
-                        errorPrintContext(code, tokenLineToRealLine[i]);
-                    }
-                    else {
-                        labelInds[line[0].split(":")[0]] = codeTokens.length;
-                    }
+                    labelInds[line[0].split(":")[0]] = codeTokens.length;
                 }
             }
         }
