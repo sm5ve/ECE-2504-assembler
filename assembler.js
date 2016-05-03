@@ -29,7 +29,7 @@ var argTypes = {
     "3reg": {"args": {"rd": "reg", "ra": "reg", "rb": "reg"}, "ord": ["rd", "ra", "rb"]},
     "1regop": {"args": {"rd": "reg", "op": "op"}, "ord": ["rd", 0, "op"]},
     "2regop": {"args": {"rd": "reg", "ra": "reg", "op": "op"}, "ord": ["rd", "ra", "op"]},
-    "1reg": {"args": {"rd": "reg"}, "ord": [0, 0, "rd"]},
+    "1reg": {"args": {"rd": "reg"}, "ord": [0,"rd", 0]},
     "1regad": {"args": {"rd": "reg", "addr": "addr"}, "ord": ["addr", "rd", "addr"]},
     "2regnod": {"args": {"ra": "reg", "rb": "reg"}, "ord": [0, "ra", "rb"]}
 }
